@@ -1,8 +1,8 @@
 require "spec_helper"
 
 describe Sunspot::Queue::SessionProxy do
-  let(:backend) { mock }
-  let(:proxy)   { Sunspot::Queue::SessionProxy.new(mock, backend) }
+  let(:backend) { double }
+  let(:proxy)   { Sunspot::Queue::SessionProxy.new(double, backend) }
 
   context "#index" do
     it "enqueues a single job for each class" do
@@ -10,7 +10,7 @@ describe Sunspot::Queue::SessionProxy do
         Person.create(:name => "#{i} of 5")
       end
 
-      backend.should_receive(:index).with do |klass, _|
+      backend.should_receive(:index).with(any_args) do |klass, _|
         klass.should == "Person"
       end.exactly(5).times
 
@@ -30,7 +30,7 @@ describe Sunspot::Queue::SessionProxy do
     it "handles a single object being enqueued" do
       person = Person.create(:name => "Buttercup")
 
-      backend.should_receive(:index).with do |_, id|
+      backend.should_receive(:index).with(any_args) do |_, id|
         id.should == person.id
       end
 
@@ -76,7 +76,7 @@ describe Sunspot::Queue::SessionProxy do
         Person.create(:name => "#{i} of 5")
       end
 
-      backend.should_receive(:remove).with do |klass, id|
+      backend.should_receive(:remove).with(any_args) do |klass, id|
         klass.should == "Person"
       end.exactly(5).times
 
@@ -96,7 +96,7 @@ describe Sunspot::Queue::SessionProxy do
     it "handles a single object" do
       person = Person.create(:name => "Buttercup")
 
-      backend.should_receive(:remove).with do |_, id|
+      backend.should_receive(:remove).with(any_args) do |_, id|
         id.should == person.id
       end
 

@@ -102,11 +102,12 @@ RSpec.configure do |config|
   # Configure Solr and run a server in the background for the duration of the
   # tests.
   config.before(:suite) do
+    server = Sunspot::Solr::Server.new
+
     solr_pid = fork do
       STDERR.reopen("/dev/null")
       STDOUT.reopen("/dev/null")
 
-      server = Sunspot::Solr::Server.new
       server.run
     end
 
@@ -115,11 +116,12 @@ RSpec.configure do |config|
     # Wait up to 30 seconds for Solr to boot
     60.times do
       begin
-        TCPSocket.new("localhost", 8983)
-        break
-      rescue
-        sleep 0.5
+        res = Net::HTTP.get_response("localhost", "/solr/default/admin/ping", 8983)
+        break if res.is_a?(Net::HTTPSuccess)
+      rescue => e
       end
+
+      sleep 0.5
     end
   end
 end
