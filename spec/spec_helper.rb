@@ -124,5 +124,7 @@ RSpec.configure do |config|
 
       sleep 0.5
     end
+
+    sleep 15
   end
 end
