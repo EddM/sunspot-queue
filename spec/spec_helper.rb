@@ -117,6 +117,7 @@ RSpec.configure do |config|
     60.times do
       begin
         res = Net::HTTP.get_response("localhost", "/solr/default/admin/ping", 8983)
+        puts res.class.to_s
         break if res.is_a?(Net::HTTPSuccess)
       rescue => e
       end
