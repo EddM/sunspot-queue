@@ -115,7 +115,7 @@ RSpec.configure do |config|
     # Wait up to 30 seconds for Solr to boot
     60.times do
       begin
-        res = Net::HTTP.get_response("localhost", "/solr/default/admin/ping", 8983)
+        res = Net::HTTP.get_response("127.0.0.1", "/solr/default/admin/ping", 8983)
         break if res.is_a?(Net::HTTPSuccess)
       rescue
       end
