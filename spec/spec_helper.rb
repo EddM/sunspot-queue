@@ -102,12 +102,11 @@ RSpec.configure do |config|
   # Configure Solr and run a server in the background for the duration of the
   # tests.
   config.before(:suite) do
-    server = Sunspot::Solr::Server.new
-
     solr_pid = fork do
       STDERR.reopen("/dev/null")
       STDOUT.reopen("/dev/null")
 
+      server = Sunspot::Solr::Server.new
       server.run
     end
 
@@ -117,14 +116,11 @@ RSpec.configure do |config|
     60.times do
       begin
         res = Net::HTTP.get_response("localhost", "/solr/default/admin/ping", 8983)
-        puts res.class.to_s
         break if res.is_a?(Net::HTTPSuccess)
-      rescue => e
+      rescue
       end
 
       sleep 0.5
     end
-
-    sleep 15
   end
 end
